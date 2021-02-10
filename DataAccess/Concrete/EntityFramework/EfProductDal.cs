@@ -11,21 +11,20 @@ using System.Text;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfProductDal : EfEntityRepositoryBase<Product, NortwindContext>, IProductDal
+    //NuGet
+    public class EfProductDal : EfEntityRepositoryBase<Product, NorthwindContext>, IProductDal
     {
-        public List<ProductDetailDto> GetProductDetailDtos()
+        public List<ProductDetailDto> GetProductDetails()
         {
-            using (NortwindContext context = new NortwindContext())
+            using (NorthwindContext context = new NorthwindContext())
             {
                 var result = from p in context.Products
                              join c in context.Categories
                              on p.CategoryId equals c.CategoryId
-                             select new ProductDetailDto
+                             select new ProductDetailDto 
                              {
-                                 ProductId = p.ProductId,
-                                 ProductName = p.ProductName,
-                                 CategoryName = c.CategoryName,
-                                 UnitsInStock = p.UnitsInStock
+                                 ProductId = p.ProductId, ProductName = p.ProductName, 
+                                 CategoryName =c.CategoryName, UnitsInStock = p.UnitsInStock 
                              };
                 return result.ToList();
             }

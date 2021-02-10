@@ -11,17 +11,16 @@ namespace DataAccess.Concrete.InMemory
 {
     public class InMemoryProductDal : IProductDal
     {
-        //Naming Convention
         List<Product> _products;
         public InMemoryProductDal()
         {
-            _products = new List<Product>
-            {
-                new Product{CategoryId = 1,ProductId = 1,ProductName = "Bardak",UnitsInStock = 15,UnitPrice = 15},
-                new Product{CategoryId = 1, ProductId = 2, ProductName = "Kamera",UnitsInStock = 3,UnitPrice = 500},
-                new Product{CategoryId = 1,ProductId = 3,ProductName = "Telefon",UnitsInStock = 15,UnitPrice = 1500},
-                new Product{CategoryId = 1,ProductId = 4, ProductName = "Klavye", UnitsInStock = 15,UnitPrice = 150},
-                new Product {CategoryId = 1,ProductId = 5, ProductName = "Fare",UnitsInStock = 1,UnitPrice = 85}
+            //Oracle,Sql Server, Postgres , MongoDb
+            _products = new List<Product> {
+                new Product{ProductId=1, CategoryId=1, ProductName="Bardak", UnitPrice=15, UnitsInStock=15},
+                new Product{ProductId=2, CategoryId=1, ProductName="Kamera", UnitPrice=500, UnitsInStock=3},
+                new Product{ProductId=3, CategoryId=2, ProductName="Telefon", UnitPrice=1500, UnitsInStock=2},
+                new Product{ProductId=4, CategoryId=2, ProductName="Klavye", UnitPrice=150, UnitsInStock=65},
+                new Product{ProductId=5, CategoryId=2, ProductName="Fare", UnitPrice=85, UnitsInStock=1}
             };
         }
         public void Add(Product product)
@@ -31,22 +30,11 @@ namespace DataAccess.Concrete.InMemory
 
         public void Delete(Product product)
         {
-            //LINQ -Language Intagreted Query
-            Product producToDelete;
-            //foreach (var p in _products)
-            //{
-            //    if (product.ProductId == p.ProductId)
-            //    {
-            //        producToDelete = p;
-            //    }
-            //}
-            producToDelete = _products.SingleOrDefault(p => p.ProductId == product.ProductId);
-            _products.Remove(producToDelete);
-        }
+            //LINQ - Language Integrated Query
+            //Lambda
+            Product productToDelete =  _products.SingleOrDefault(p=>p.ProductId ==product.ProductId);
 
-        public Product Get(Expression<Func<Product, bool>> filter)
-        {
-            throw new NotImplementedException();
+            _products.Remove(productToDelete);
         }
 
         public List<Product> GetAll()
@@ -54,29 +42,34 @@ namespace DataAccess.Concrete.InMemory
             return _products;
         }
 
+        public void Update(Product product)
+        {
+            //Gönderdiğim ürün id'sine sahip olan listedeki ürünü bul
+            Product productToUpdate = _products.SingleOrDefault(p => p.ProductId == product.ProductId);
+            productToUpdate.ProductName = product.ProductName;
+            productToUpdate.CategoryId = product.CategoryId;
+            productToUpdate.UnitPrice = product.UnitPrice;
+            productToUpdate.UnitsInStock = product.UnitsInStock;
+        }
+
+        public List<Product> GetAllByCategory(int categoryId)
+        {
+           return _products.Where(p => p.CategoryId == categoryId).ToList();
+        }
+
         public List<Product> GetAll(Expression<Func<Product, bool>> filter = null)
         {
             throw new NotImplementedException();
         }
 
-        public List<Product> GetAllByCategory(int categoryId)
-        {
-            return _products.Where(p => p.CategoryId == categoryId).ToList();
-        }
-
-        public List<ProductDetailDto> GetProductDetailDtos()
+        public Product Get(Expression<Func<Product, bool>> filter)
         {
             throw new NotImplementedException();
         }
 
-        public void Update(Product product)
+        public List<ProductDetailDto> GetProductDetails()
         {
-            // Gönderdiğim ürün id'sine sahip olan listedeki ürünü bul 
-            Product producToUpdate = _products.SingleOrDefault(p => p.ProductId == product.ProductId);
-            producToUpdate.ProductName = product.ProductName;
-            producToUpdate.CategoryId = product.CategoryId;
-            producToUpdate.UnitsInStock = product.UnitsInStock;
-            producToUpdate.UnitPrice = product.UnitPrice;
+            throw new NotImplementedException();
         }
     }
 }
